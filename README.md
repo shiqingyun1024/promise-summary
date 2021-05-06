@@ -68,6 +68,32 @@ what why how
      成功的结果数据一般称为value，失败的结果数据一般称为reason
 ```
 #### 2.1.3、Promise的基本流程
+```
+// 1. 创建一个新的promise对象
+new Promise((resolve,reject)=>{ // 执行器函数
+// 2.执行异步操作函数
+  setTimeout(()=>{
+     const time = Date.now() // 如果当前时间是偶数就代表成功，否则代表失败
+     // 3.1 如果成功了，调用resolve(value)
+     if(time%2===0){
+        resolve('成功的数据，time='+time)
+     }else{
+        // 3.2 如果失败了，调用reject(reason)
+        reject('失败的数据，time='+time)
+     }
+  },1000)
+
+
+})
+p.then(
+   value =>{ // 接收得到成功的value数据  onResolved
+     console.log(value)
+   },
+   reason =>{ // 接收得到失败的reason数据  onRejected
+     console.log(reason)
+   }
+)
+```
 ### 2.2、为什么要用Promise？
 #### 2.2.1、指定回调函数的方式更加灵活
 ```
