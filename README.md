@@ -135,5 +135,18 @@ p.then(
    说明：返回一个新的promise，只有所有的promise都成功才成功，只要有一个失败了就直接失败
 7、Promise.race方法：(promises)=>{}
    promises: 包含n个promise的数组
-   说明：返回一个新的promise，第一个完成的promise的结果状态就是最终的结果状态    
+   说明：返回一个新的promise，第一个完成的promise的结果状态就是最终的结果状态 
+
+   对比展示
+   // 产生一个成功值为1的promise对象
+   const p1 = new Promise((resolve,reject)=>{
+      resolve(1)
+   })
+   const p2 = Promse.resolve(2)   
+   const p3 = Promse.reject(3)  
+   p1.then(value=>{console.log(value)}) 
+   p2.then(value=>{console.log(value)}) 
+   p3.catch(reason=>{console.log(reason)}) 
+
+   const pAll = Promise.all([p1,p2,p3])
 ```
