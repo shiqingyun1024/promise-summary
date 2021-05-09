@@ -149,4 +149,36 @@ p.then(
    p3.catch(reason=>{console.log(reason)}) 
 
    const pAll = Promise.all([p1,p2,p3])
+   pAll.then(values=>{
+      console.log('all onResolved()',values)
+   },
+   reason=>{
+      console.log('all onRejected()',reason)
+   })
+   const pRace = Promise.race([p1,p2,p3])
+   pRace.then(value=>{
+      console.log('race onResolved()',value)
+   },
+   reason=>{
+      console.log('race onRejected()',reason)
+   })
+```
+#### 2.3.2、promise的几个关键问题
+```
+1、如何改变promise的状态？
+(1)、resolve(value):如果当前是pendding就会变为resolved
+(2)、reject(reason):如果当前是pendding就会变为rejected
+(3)、抛出异常：如果当前是pendding就会变为rejected
+
+2、一个promise指定多个成功/失败回调函数，都会调用吗？
+   会，当promise改变为对应状态时都会调用
+
+3、改变promise状态和指定回调函数谁先谁后？
+(1)、都有可能，正常情况下是先指定回调函数再改变状态，但也可以先改状态再指定回调
+(2)、如何先改状态再指定回调？
+在执行器中直接调用resolve()/reject()
+延迟更长时间才调用then()
+(3)
+(4)
+
 ```
