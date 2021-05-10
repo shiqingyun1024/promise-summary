@@ -169,6 +169,11 @@ p.then(
 (1)、resolve(value):如果当前是pendding就会变为resolved
 (2)、reject(reason):如果当前是pendding就会变为rejected
 (3)、抛出异常：如果当前是pendding就会变为rejected
+const p = new Promise((resolve,reject)=>{
+   // throw new Error('出错了') // 抛出异常，promise就会变为rejected，reason为抛出的error
+   throw 3 // 抛出异常，promise就会变为rejected，reason为抛出的3
+})
+console.log(p)
 
 2、一个promise指定多个成功/失败回调函数，都会调用吗？
    会，当promise改变为对应状态时都会调用
@@ -178,7 +183,25 @@ p.then(
 (2)、如何先改状态再指定回调？
 在执行器中直接调用resolve()/reject()
 延迟更长时间才调用then()
-(3)
+
+// 常规：先指定回调函数，后改变的状态
+new Promise((resolve,reject)=>{
+   setTimeout(()=>{
+      resolve(1)  // 后改变的状态（同时指定数据），异步执行回调函数
+   },1000)
+}).then( // 先指定回调函数，保存当前的回调函数
+   value=>{},
+   reason=>{console.log('reason',reason)}
+)
+new Promise((resolve,reject)=>{
+      resolve(1)  // 先改变的状态（同时指定数据），保存当前的状态
+}).then( // 后指定回调函数，异步执行回调函数
+   value=>{console.log('value',value)},
+   reason=>{console.log('reason',reason)}
+)
+(3) 什么时候才能得到数据？
+如果先指定的回调，那当状态发生改变时，回调函数就会调用，得到数据
+如果先改变的状态，那当指定回调时，回调函数就会调用，得到数据
 (4)
 
 ```
