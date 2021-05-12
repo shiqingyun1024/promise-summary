@@ -227,8 +227,12 @@ new Promise((resolve,reject)=>{
       // return Promise.reject(4)  // reject
       throw 5  // reject
    },
-   reason=>{
-      console.log('onRejected1()',reason)
+   reason=>{  // 这个函数返回的结果和它是失败的回调函数没关系，如果它返回的是return 2，那么下面的回调函数会调用resolve回调函数
+      console.log('onRejected1()',reason) 
+      // return 2  // resolve
+      // return Promise.resolve(3) // resolve
+      // return Promise.reject(4)  // reject
+      throw 5  // reject
    }
 ).then(
    value=>{
@@ -271,4 +275,60 @@ new Promise((resolve,reject)=>{
       console.log('执行任务3的结果：',value)
    }
 )
+```
+##### 2.3.2.6.promise异常穿透
+```
+（1）、当使用promise的then链式调用时，可以在最后指定失败的回调，异常是一步一步传下来的
+（2）、前面任何操作除了异常，都会传到最后失败的回调中处理
+new Promise((resolve,reject)=>{
+   reject(1)
+}).then(
+   value=>{
+      console.log('onResolved1',value)
+      return 2
+   }
+).then(
+   value=>{
+      console.log('onResolved2',value)
+      return 3
+   }
+).then(
+   value=>{
+      console.log('onResolved3',value)
+      return 4
+   }
+).catch(error=>{
+   console.log(error)
+})
+在catch中输出1，因为是失败的回调。不是一下子就跳转到catch方法的，而是一步一步穿透下来的，相当于下面的这个流程
+new Promise((resolve,reject)=>{
+   reject(1)
+}).then(
+   value=>{
+      console.log('onResolved1',value)
+      return 2
+   },
+   reason => { throw reason }
+).then(
+   value=>{
+      console.log('onResolved2',value)
+      return 3
+   },
+   reason => { throw reason }
+).then(
+   value=>{
+      console.log('onResolved3',value)
+      return 4
+   },
+   reason => { throw reason }  // 或者写成 reason => Promise.reject(reason)
+).catch(error=>{
+   console.log(error)
+})
+
+
+```
+#### 2.3.2.7.中断promise链
+```
+（1）当使用promise的then链式调用时，在中间中断，在调用后面的回调函数
+（2）办法：在回调函数中返回一个pendding状态的promise对象
 ```
