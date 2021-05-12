@@ -164,8 +164,9 @@ p.then(
    })
 ```
 #### 2.3.2、promise的几个关键问题
+
+##### 2.3.2.1、如何改变promise的状态？
 ```
-1、如何改变promise的状态？
 (1)、resolve(value):如果当前是pendding就会变为resolved
 (2)、reject(reason):如果当前是pendding就会变为rejected
 (3)、抛出异常：如果当前是pendding就会变为rejected
@@ -174,11 +175,14 @@ const p = new Promise((resolve,reject)=>{
    throw 3 // 抛出异常，promise就会变为rejected，reason为抛出的3
 })
 console.log(p)
+```
 
-2、一个promise指定多个成功/失败回调函数，都会调用吗？
+##### 2.3.2.2、一个promise指定多个成功/失败回调函数，都会调用吗？
+```
    会，当promise改变为对应状态时都会调用
-
-3、改变promise状态和指定回调函数谁先谁后？
+```
+##### 2.3.2.3、改变promise状态和指定回调函数谁先谁后？
+```
 (1)、都有可能，正常情况下是先指定回调函数再改变状态，但也可以先改状态再指定回调
 (2)、如何先改状态再指定回调？
 在执行器中直接调用resolve()/reject()
@@ -203,12 +207,15 @@ new Promise((resolve,reject)=>{
 如果先指定的回调，那当状态发生改变时，回调函数就会调用，得到数据
 如果先改变的状态，那当指定回调时，回调函数就会调用，得到数据
 (4)
-4. promise.then()返回的新的promise的结果状态由什么决定？
+```
+##### 2.3.2.4. promise.then()返回的新的promise的结果状态由什么决定？
+```
 (1)简单表达：由then()指定的回调函数执行的结果决定
 (2)详细表达：
   如果抛出异常，新promise变为rejected，reason为抛出的异常
   如果返回的是非promise的任意值，新的promise变为resolved，value为返回的值
   如果返回的是另外一个新的promise，此promise的结果就会成为新promise的结果
+  如果返回的是一个异步函数，要用new promise()进行处理
 
 new Promise((resolve,reject)=>{
    resolve(1)
@@ -229,6 +236,39 @@ new Promise((resolve,reject)=>{
    },
    reason=>{
       console.log('onRejected2()',reason)
+   }
+)
+```
+
+##### 2.3.2.5.promise如何串联多个操作任务
+```
+（1）promise的then()返回一个新的promise，可以看成then()的链式调用
+（2）通过then的链式调用串联多个同步/异步任务
+new Promise((resolve,reject)=>{
+   setTimeout(()=>{
+      console.log('执行任务1（异步）')
+      resolve(1)
+   },1000)
+}).then(
+   value=>{
+      console.log('任务1的结果：',value)
+      console.log('执行任务2（同步）')
+      return 2
+   }
+).then(
+   value=>{
+      console.log('任务2的结果：',value)
+      return new Promise((resolve,reject)=>{
+         // 启动任务3（异步）
+         setTimeout(()=>{
+           console.log('执行任务3（异步）')
+           resolve(3)
+         },1000)
+      })
+   }
+).then(
+   value=>{
+      console.log('执行任务3的结果：',value)
    }
 )
 ```
