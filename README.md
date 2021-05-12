@@ -203,5 +203,32 @@ new Promise((resolve,reject)=>{
 如果先指定的回调，那当状态发生改变时，回调函数就会调用，得到数据
 如果先改变的状态，那当指定回调时，回调函数就会调用，得到数据
 (4)
+4. promise.then()返回的新的promise的结果状态由什么决定？
+(1)简单表达：由then()指定的回调函数执行的结果决定
+(2)详细表达：
+  如果抛出异常，新promise变为rejected，reason为抛出的异常
+  如果返回的是非promise的任意值，新的promise变为resolved，value为返回的值
+  如果返回的是另外一个新的promise，此promise的结果就会成为新promise的结果
 
+new Promise((resolve,reject)=>{
+   resolve(1)
+}).then(
+   value=>{
+      console.log('onResolved1()',value)
+      // return 2  // resolve
+      // return Promise.resolve(3) // resolve
+      // return Promise.reject(4)  // reject
+      throw 5  // reject
+   },
+   reason=>{
+      console.log('onRejected1()',reason)
+   }
+).then(
+   value=>{
+      console.log('onResolved2()',value)
+   },
+   reason=>{
+      console.log('onRejected2()',reason)
+   }
+)
 ```
