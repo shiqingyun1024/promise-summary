@@ -331,4 +331,40 @@ new Promise((resolve,reject)=>{
 ```
 （1）当使用promise的then链式调用时，在中间中断，在调用后面的回调函数
 （2）办法：在回调函数中返回一个pendding状态的promise对象
+new Promise((resolve,reject)=>{
+   reject(1)
+}).then(
+   value=>{
+      console.log('onResolved1',value)
+      return 2
+   }
+).then(
+   value=>{
+      console.log('onResolved2',value)
+      return 3
+   }
+).then(
+   value=>{
+      console.log('onResolved3',value)
+      return new Promise(()=>{})  // 返回一个pendding的promise 中断promise链
+   }
+).catch(error=>{
+   console.log(error)
+})
+
 ```
+## 3、自定义(手写)Promise
+### 3.1、定义整体结构
+### 3.2、Promise构造函数的实现
+### 3.3、promise.then()/catch()的实现
+### 3.4、Promise.resolve()/reject()的实现
+### 3.5、Promise.all()/race()的实现
+### 3.6、Promise.resolveDelay()/rejectDelay()的实现
+### 3.7、ES5 function完整版本
+### 3.8、ES6 class完整版
+
+## 4、async与await
+## 5、JS异步之宏队列与微队列
+## 6、promise相关面试题
+
+
