@@ -7,7 +7,18 @@
 ** excutor：执行器函数（同步执行）
 */ 
 function Promise(excutor){
+    this.status = 'pending'  // 给promise对象指定status属性，初始值为pending
+    this.data = undefined  // 给promise对象指定一个用于存储结果数据的属性
+    this.callbacks = []  // 每个元素的结构：{ onResolved(){}, onRejected(){}}
 
+    function resolve(value){
+
+    }
+    function reject(reason){
+
+    }
+    // 立即同步执行excutor
+    excutor(resolve,reject)
 }
 
 /*
