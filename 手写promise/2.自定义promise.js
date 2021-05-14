@@ -49,7 +49,13 @@
             }
         }
         // 立即同步执行excutor
-        excutor(resolve, reject)
+        // 使用try catch是因为防止直接throw抛出错误，这个时候既没有调resolve，也没有调reject，直接抛出错误了
+        try{
+            excutor(resolve, reject)
+        }catch(error){  // 如果执行器抛出异常，promise对象变为rejected状态
+            reject(error)
+        }
+        
     }
 
     /*
