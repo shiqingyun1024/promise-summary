@@ -6,7 +6,6 @@
      ** Promise构造函数
      ** excutor：执行器函数（同步执行）
      */
-    console.log('执行Promise');
     function Promise(excutor) {
         // 将当前Promise对象保存起来
         const self = this
@@ -60,6 +59,22 @@
         }
         
     }
+    /*
+    ** 如果回调函数返回是promise，return的promise结果就是这个promise的结果
+    */ 
+   try{
+       const result = onResolved(self.data)
+    // 3.如果回调函数返回是promise，return的promise结果就是这个promise的结果
+    if(result instanceof Promise){
+        result.then(resolve,reject)
+    }else{
+    // 3.如果回调函数返回不是promise，return的promise就会成功，value就是返回的值
+       resolve(result)
+    }   
+   }catch(error){
+    //  1.如果抛出异常，return的promise就会失败，reason就是error
+    reject(error)
+   }
 
     /*
      ** Promise原型对象的then()
