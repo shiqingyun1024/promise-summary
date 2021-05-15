@@ -1,16 +1,17 @@
 /*
- ** 自定义promise函数模块：IIFE
+ ** 自定义Promise函数模块：IIFE
  */
 (function (window) {
     /*
-     ** promise构造函数
+     ** Promise构造函数
      ** excutor：执行器函数（同步执行）
      */
+    console.log('执行Promise');
     function Promise(excutor) {
-        // 将当前promise对象保存起来
+        // 将当前Promise对象保存起来
         const self = this
-        self.status = 'pending' // 给promise对象指定status属性，初始值为pending
-        self.data = undefined // 给promise对象指定一个用于存储结果数据的属性
+        self.status = 'pending' // 给Promise对象指定status属性，初始值为pending
+        self.data = undefined // 给Promise对象指定一个用于存储结果数据的属性
         self.callbacks = [] // 每个元素的结构：{ onResolved(){}, onRejected(){}}
 
         function resolve(value) {
@@ -54,7 +55,7 @@
         // 使用try catch是因为防止直接throw抛出错误，这个时候既没有调resolve，也没有调reject，直接抛出错误了
         try{
             excutor(resolve, reject)
-        }catch(error){  // 如果执行器抛出异常，promise对象变为rejected状态
+        }catch(error){  // 如果执行器抛出异常，Promise对象变为rejected状态
             reject(error)
         }
         
@@ -63,7 +64,7 @@
     /*
      ** Promise原型对象的then()
      ** 指定成功和失败的回调函数
-     ** 返回一个新的promise对象
+     ** 返回一个新的Promise对象
      */
     Promise.prototype.then = function (onResolved, onRejected) {
       const self = this
@@ -76,7 +77,7 @@
     /*
      ** Promise原型对象的catch()
      ** 指定失败的回调函数
-     ** 返回一个新的promise对象
+     ** 返回一个新的Promise对象
      */
     Promise.prototype.catch = function (onRejected) {
         const self = this
@@ -85,7 +86,7 @@
 
     /*
      ** Promise函数对象的resolve方法
-     ** 返回一个指定结果的成功的promise对象
+     ** 返回一个指定结果的成功的Promise对象
      */
     Promise.resolve = function (value) {
         const self = this
@@ -94,7 +95,7 @@
 
     /*
      ** Promise函数对象的reject方法
-     ** 返回一个指定reason的失败的promise对象
+     ** 返回一个指定reason的失败的Promise对象
      */
     Promise.reject = function (reason) {
         const self = this
@@ -103,18 +104,18 @@
 
     /*
      ** Promise函数对象的all方法
-     ** 返回一个Promise，只有当所有promise都成功才成功，否则只要有一个失败的就都失败
+     ** 返回一个Promise，只有当所有Promise都成功才成功，否则只要有一个失败的就都失败
      */
-    Promise.all = function (promises) {
+    Promise.all = function (Promises) {
         const self = this
 
     }
 
     /*
      ** Promise函数对象的race方法
-     ** 返回一个Promise，其结果由第一个完成的promise来决定
+     ** 返回一个Promise，其结果由第一个完成的Promise来决定
      */
-    Promise.race = function (promises) {
+    Promise.race = function (Promises) {
         const self = this
 
 
@@ -123,12 +124,12 @@
     /*
      ** Promise函数对象的allSettled方法
      */
-    Promise.allSettled = function (promises) {
+    Promise.allSettled = function (Promises) {
         const self = this
 
 
     }
 
 
-    // 向外暴露promise函数
+    // 向外暴露Promise函数
 })(window)
