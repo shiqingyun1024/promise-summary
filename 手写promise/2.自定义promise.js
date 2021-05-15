@@ -24,7 +24,7 @@
             // 保存value数据
             self.data = value
             // 如果有待执行callback函数，立即异步执行回调函数onResolved
-            if (self.callbacks.length > o) {
+            if (self.callbacks.length > 0) {
                 setTimeout(() => { // 放入队列中执行所有成功的回调
                     self.callbacks.forEach(callbacksobj => {
                         callbacksobj.onResolved(value)
@@ -132,4 +132,6 @@
 
 
     // 向外暴露Promise函数
+    window.Promise = Promise
+
 })(window)
