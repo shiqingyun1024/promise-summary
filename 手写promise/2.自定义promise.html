@@ -9,18 +9,27 @@
     <script src="./2.自定义promise.js"></script>
     <script>
         const p = new Promise((resolve,reject)=>{
-            resolve(1)
-            reject(2)
+            setTimeout(()=>{
+                resolve(1)
+            },100)
+            // reject(2)
         })
         p.then(
-            value =>{},
-            reason =>{},
+            value =>{
+                console.log('onResolved1()',value);
+            },
+            reason =>{
+                console.log('onResolved1()',reason);
+            },
         )
         p.then(
-            value =>{},
-            reason =>{},
+            value =>{
+                console.log('onResolved2()',value);
+            },
+            reason =>{
+                console.log('onResolved2()',reason);
+            },
         )
-
     </script>
 </body>
 </html>

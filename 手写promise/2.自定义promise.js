@@ -64,7 +64,11 @@
      ** 返回一个新的promise对象
      */
     Promise.prototype.then = function (onResolved, onRejected) {
-
+      // 假设当前状态还是pending状态，将回调函数保存起来
+      this.callbacks.push({
+        onResolved, 
+        onRejected
+      })
     }
     /*
      ** Promise原型对象的catch()
