@@ -83,11 +83,15 @@
      ** 返回一个新的Promise对象
      */
     Promise.prototype.then = function (onResolved, onRejected) {
+        // 向后传递成功的value
+        onResolved = typeof onResolved === 'function'?onResolved:value=>value
+        // 指定默认的失败的回调（实现异常穿透的关键点） 向后传递失败的reason
+        onRejected = typeof onRejected === 'function'?onRejected:reason=>{throw reason}
         const self = this
         // 返回一个新的promise对象
         return new Promise((resolve, reject) => {
             /*
-            **调用指定回调函数处理
+            **调用指定回调函数处理，根据执行结果，改变return的promise的状态
             */
             function handle(callback) {
                 /*
@@ -113,8 +117,9 @@
                     reject(error)
                 }
             }
+
+            // 当前状态是pending状态，将回调函数保存起来
             if (self.status === PENDING) {
-                // 假设当前状态还是pending状态，将回调函数保存起来
                 self.callbacks.push({
                     onResolved(value) {
                         handle(onResolved)
@@ -123,11 +128,11 @@
                         handle(onRejected)
                     }
                 })
-            } else if (self.status === RESOLVED) {
+            } else if (self.status === RESOLVED) {  // 如果当前是resolved状态，异步执行onResolved并改变return的promise状态
                 setTimeout(() => {
                     handle(onResolved)
                 })
-            } else { // 'rejected'
+            } else { // 'rejected'  如果当前是rejected状态，异步执行onRejected并改变return的promise状态
                 setTimeout(() => {
                     handle(onRejected)
                 })
@@ -140,8 +145,8 @@
      ** 返回一个新的Promise对象
      */
     Promise.prototype.catch = function (onRejected) {
-        const self = this
-
+        // const self = this
+        return this.then(undefined,onRejected)
     }
 
     /*
