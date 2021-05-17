@@ -16,7 +16,7 @@
 
         function resolve(value) {
             // 如果当前状态不是pending，直接结束
-            if(self.status!=='pending'){
+            if (self.status !== 'pending') {
                 return
             }
             // 将状态改为resolved
@@ -35,7 +35,7 @@
         }
 
         function reject(reason) {
-            if(self.status!=='pending'){
+            if (self.status !== 'pending') {
                 return
             }
             // 将状态改为rejected
@@ -53,29 +53,29 @@
         }
         // 立即同步执行excutor
         // 使用try catch是因为防止直接throw抛出错误，这个时候既没有调resolve，也没有调reject，直接抛出错误了
-        try{
+        try {
             excutor(resolve, reject)
-        }catch(error){  // 如果执行器抛出异常，Promise对象变为rejected状态
+        } catch (error) {  // 如果执行器抛出异常，Promise对象变为rejected状态
             reject(error)
         }
-        
+
     }
     /*
     ** 如果回调函数返回是promise，return的promise结果就是这个promise的结果
-    */ 
-   try{
-       const result = onResolved(self.data)
-    // 3.如果回调函数返回是promise，return的promise结果就是这个promise的结果
-    if(result instanceof Promise){
-        result.then(resolve,reject)
-    }else{
-    // 3.如果回调函数返回不是promise，return的promise就会成功，value就是返回的值
-       resolve(result)
-    }   
-   }catch(error){
-    //  1.如果抛出异常，return的promise就会失败，reason就是error
-    reject(error)
-   }
+    */
+    try {
+        const result = onResolved(self.data)
+        // 3.如果回调函数返回是promise，return的promise结果就是这个promise的结果
+        if (result instanceof Promise) {
+            result.then(resolve, reject)
+        } else {
+            // 3.如果回调函数返回不是promise，return的promise就会成功，value就是返回的值
+            resolve(result)
+        }
+    } catch (error) {
+        //  1.如果抛出异常，return的promise就会失败，reason就是error
+        reject(error)
+    }
 
     /*
      ** Promise原型对象的then()===（同步执行的，只是根据状态来分别调不同的回调函数）
@@ -83,12 +83,49 @@
      ** 返回一个新的Promise对象
      */
     Promise.prototype.then = function (onResolved, onRejected) {
-      const self = this
-      // 假设当前状态还是pending状态，将回调函数保存起来
-      self.callbacks.push({
-        onResolved, 
-        onRejected
-      })
+        const self = this
+        // 返回一个新的promise对象
+        return new Promise((resolve, reject) => {
+            function handle(params){
+                /*
+                **1、如果抛出异常，return的promise就会失败，reason就是error
+                **2、如果回调函数返回的不是promise，return的promise就会成功，value就是返回的值
+                **3、如果回调函数返回是promise，return的promise结果就是这个promise的结果
+                */ 
+               try{
+                   const result = onResolved(self.data)
+                   // 3、如果回调函数返回是promise，return的promise结果就是这个promise的结果
+                   if(result instanceof Promise){
+                       result.then(
+                           value => resolve(value), // 当result成功时，让return的promise也成功
+                           reason => reject(reason) // 当result失败时，让return的promise也失败
+                       )
+                       // result.then(resolve,reject)   
+                   }else{
+                     // 3、如果回调函数返回的不是promise，return的promise就会成功，value就是返回的值
+                     resolve(result)
+                   }   
+               } catch(error){
+                // 1、如果抛出异常，return的promise就会失败，reason就是error
+                reject(error) 
+               }
+            }
+            if (self.status === PENDING) {
+                // 假设当前状态还是pending状态，将回调函数保存起来
+                self.callbacks.push({
+                    onResolved(value){
+                        onResolved(self.data)
+                    },
+                    onRejected(reason){
+                        onRejected(self.data)
+                    }
+                })
+            }else if(self.status === RESOLVED){
+                setTimeout(()=>{
+
+                })
+            }
+        })
     }
     /*
      ** Promise原型对象的catch()===（同步执行的，只是根据状态来分别调不同的回调函数）
