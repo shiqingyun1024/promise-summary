@@ -12,27 +12,29 @@
         console.log(Promise);
         const p = new Promise((resolve,reject)=>{
             setTimeout(()=>{
-                resolve(1)
+                // resolve(1)
                 console.log("resolve");
+                reject(2)
             },100)
-            // reject(2)
-        })
-        p.then(
+        }).then(
             value =>{
                 console.log('onResolved1()',value);
             },
             reason =>{
                 console.log('onRejected1()',reason);
+                throw 3
             },
-        )
-        p.then(
+        ).then(
             value =>{
                 console.log('onResolved2()',value);
             },
             reason =>{
                 console.log('onRejected2()',reason);
+                throw 5
             },
-        )
+        ).catch(reason=>{
+            console.log('onRejected3()',reason);
+        })
     </script>
 </body>
 </html>

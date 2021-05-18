@@ -3,6 +3,9 @@
  ** 重要的是先理解Promise函数内部的实现，以及一些原理，然后再根据自己理解去实现。
  */
 (function (window) {
+    const PENDING = 'pending'
+    const RESOLVED = 'resolved'
+    const REJECTED = 'rejected'
     /*
      ** Promise构造函数
      ** excutor：执行器函数（同步执行）
@@ -43,7 +46,7 @@
             // 保存value数据
             self.data = reason
             // 如果有待执行callback函数，立即异步执行回调函数onRejected
-            if (self.callbacks.length > o) {
+            if (self.callbacks.length > 0) {
                 setTimeout(() => { // 放入队列中执行所有失败的回调
                     self.callbacks.forEach(callbacksobj => {
                         callbacksobj.onRejected(reason)
@@ -60,23 +63,6 @@
         }
 
     }
-    /*
-    ** 如果回调函数返回是promise，return的promise结果就是这个promise的结果
-    */
-    try {
-        const result = onResolved(self.data)
-        // 3.如果回调函数返回是promise，return的promise结果就是这个promise的结果
-        if (result instanceof Promise) {
-            result.then(resolve, reject)
-        } else {
-            // 3.如果回调函数返回不是promise，return的promise就会成功，value就是返回的值
-            resolve(result)
-        }
-    } catch (error) {
-        //  1.如果抛出异常，return的promise就会失败，reason就是error
-        reject(error)
-    }
-
     /*
      ** Promise原型对象的then()===（同步执行的，只是根据状态来分别调不同的回调函数）
      ** 指定成功和失败的回调函数
