@@ -67,8 +67,28 @@
      ** Promise原型对象的then()===（同步执行的，只是根据状态来分别调不同的回调函数）
      ** 指定成功和失败的回调函数
      ** 返回一个新的Promise对象
+     ** 返回promise的结果由onResolved/onRejected执行结果决定
      */
     Promise.prototype.then = function (onResolved, onRejected) {
+        const self = this;
+        // 返回一个新的promise
+        return new Promise((resolve,reject)=>{
+            // 当前promise的状态是resolved
+            if(self.status === RESOLVED){
+                // 异步执行成功的回调函数
+                setTimeout(()=>{
+                    /*
+                    返回promise的结果由onResolved/onRejected执行结果决定
+                    
+                    */ 
+                    onResolved(self.data)
+                })
+            }else if(self.status === REJECTED){// 当前promise的状态是rejected
+
+            }else{// 当前promise的状态是pending
+
+            }
+        })
         // 向后传递成功的value
         onResolved = typeof onResolved === 'function'?onResolved:value=>value
         // 指定默认的失败的回调（实现异常穿透的关键点） 向后传递失败的reason

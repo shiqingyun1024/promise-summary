@@ -8,6 +8,7 @@
 <body>
     <script src="./2.自定义promise.js"></script>
     <script>
+        // 只有抛出异常或者返回失败的promise才会执行reject函数
         console.log("开始执行html");
         console.log(Promise);
         const p = new Promise((resolve,reject)=>{
