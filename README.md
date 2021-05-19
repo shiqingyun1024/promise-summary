@@ -358,6 +358,19 @@ new Promise((resolve,reject)=>{
 ### 3.2、Promise构造函数的实现
 ### 3.3、promise.then()/catch()的实现
 ### 3.4、Promise.resolve()/reject()的实现
+```
+// 返回一个指定了成功value的promise对象
+// 一般数据或promise
+Promise.resolve = function (value){
+   return new Promise((resolve,reject)=>{
+      if(value instanceof Promise){
+         value.then(resolve,reject)
+      }else{
+         resolve(value)
+      }
+   })
+}
+```
 ### 3.5、Promise.all()/race()的实现
 ### 3.6、Promise.resolveDelay()/rejectDelay()的实现
 ### 3.7、ES5 function完整版本

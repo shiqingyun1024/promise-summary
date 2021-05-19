@@ -71,6 +71,10 @@
      */
     Promise.prototype.then = function (onResolved, onRejected) {
         const self = this;
+        // 指定回调函数的默认值（必须是函数）
+        onResolved = typeof onResolved === 'function'?onResolved:value=>value
+        onRejected = typeof onRejected === 'function'?onRejected:reason=>{throw reason}
+
         // 返回一个新的promise
         return new Promise((resolve, reject) => {
             /*
