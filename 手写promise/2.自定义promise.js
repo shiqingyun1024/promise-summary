@@ -58,7 +58,7 @@
         // 使用try catch是因为防止直接throw抛出错误，这个时候既没有调resolve，也没有调reject，直接抛出错误了
         try {
             excutor(resolve, reject)
-        } catch (error) {  // 如果执行器抛出异常，Promise对象变为rejected状态
+        } catch (error) { // 如果执行器抛出异常，Promise对象变为rejected状态
             reject(error)
         }
 
@@ -72,39 +72,76 @@
     Promise.prototype.then = function (onResolved, onRejected) {
         const self = this;
         // 返回一个新的promise
-        return new Promise((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
+            /*
+            执行指定的回调函数
+            根据执行的结果改变return的promise的状态/数组
+            
+            */
+            function handle(callbacks) {
+                /*
+                 返回promise的结果由onResolved/onRejected执行结果决定
+                 1、抛出异常，返回promise的结果为失败，reason为异常
+                 2、返回的是promise，返回promise的结果就是这个结果
+                 3、返回的不是promise，返回promise为成功，value就是返回值
+                 */
+                try {
+                    const result = onResolved(self.data)
+                    if (result instanceof Promise) { // 2、返回的是promise，返回promise的结果就是这个结果
+                        //   result.then(
+                        //       value=> resolve(value),
+                        //       reason=> reject(reason)
+                        //   )
+
+                        reasult.then(resolve, reject)
+                    } else { // 3、返回的不是promise，返回promise为成功，value就是返回值
+                        resolve(result)
+                    }
+                } catch (error) { // 1、抛出异常，返回promise的结果为失败，reason为异常
+                    reject(error)
+                }
+            }
             // 当前promise的状态是resolved
-            if(self.status === RESOLVED){
-                // 异步执行成功的回调函数
-                setTimeout(()=>{
-                    /*
-                    返回promise的结果由onResolved/onRejected执行结果决定
-                    
-                    */ 
-                    onResolved(self.data)
+            if (self.status === RESOLVED) {
+                // 立即异步执行成功的回调函数
+                setTimeout(() => {
+                    handle(onResolved)
                 })
-            }else if(self.status === REJECTED){// 当前promise的状态是rejected
-
-            }else{// 当前promise的状态是pending
-
+            } else if (self.status === REJECTED) { // 当前promise的状态是rejected
+                // 立即异步执行失败的回调函数
+                setTimeout(() => {
+                    handle(onRejected)
+                })
+            } else { // 当前promise的状态是pending
+                // 将成功和失败的回调函数保存callbacks容器中缓存
+                self.callbacks.push({
+                    onResolved(){
+                        handle(onResolved)
+                    },
+                    onRejected(){
+                        handle(onRejected)
+                    }
+                })
             }
         })
         // 向后传递成功的value
-        onResolved = typeof onResolved === 'function'?onResolved:value=>value
+        onResolved = typeof onResolved === 'function' ? onResolved : value => value
         // 指定默认的失败的回调（实现异常穿透的关键点） 向后传递失败的reason
-        onRejected = typeof onRejected === 'function'?onRejected:reason=>{throw reason}
+        onRejected = typeof onRejected === 'function' ? onRejected : reason => {
+            throw reason
+        }
         const self = this
         // 返回一个新的promise对象
         return new Promise((resolve, reject) => {
             /*
-            **调用指定回调函数处理，根据执行结果，改变return的promise的状态
-            */
+             **调用指定回调函数处理，根据执行结果，改变return的promise的状态
+             */
             function handle(callback) {
                 /*
-                **1、如果抛出异常，return的promise就会失败，reason就是error
-                **2、如果回调函数返回的不是promise，return的promise就会成功，value就是返回的值
-                **3、如果回调函数返回是promise，return的promise结果就是这个promise的结果
-                */
+                 **1、如果抛出异常，return的promise就会失败，reason就是error
+                 **2、如果回调函数返回的不是promise，return的promise就会成功，value就是返回的值
+                 **3、如果回调函数返回是promise，return的promise结果就是这个promise的结果
+                 */
                 try {
                     const result = callback(self.data)
                     // 3、如果回调函数返回是promise，return的promise结果就是这个promise的结果
@@ -134,7 +171,7 @@
                         handle(onRejected)
                     }
                 })
-            } else if (self.status === RESOLVED) {  // 如果当前是resolved状态，异步执行onResolved并改变return的promise状态
+            } else if (self.status === RESOLVED) { // 如果当前是resolved状态，异步执行onResolved并改变return的promise状态
                 setTimeout(() => {
                     handle(onResolved)
                 })
@@ -152,7 +189,7 @@
      */
     Promise.prototype.catch = function (onRejected) {
         // const self = this
-        return this.then(undefined,onRejected)
+        return this.then(undefined, onRejected)
     }
 
     /*
