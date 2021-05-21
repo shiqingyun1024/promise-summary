@@ -128,63 +128,6 @@
                 })
             }
         })
-        // 向后传递成功的value
-        onResolved = typeof onResolved === 'function' ? onResolved : value => value
-        // 指定默认的失败的回调（实现异常穿透的关键点） 向后传递失败的reason
-        onRejected = typeof onRejected === 'function' ? onRejected : reason => {
-            throw reason
-        }
-        // const self = this
-        // 返回一个新的promise对象
-        return new Promise((resolve, reject) => {
-            /*
-             **调用指定回调函数处理，根据执行结果，改变return的promise的状态
-             */
-            function handle(callback) {
-                /*
-                 **1、如果抛出异常，return的promise就会失败，reason就是error
-                 **2、如果回调函数返回的不是promise，return的promise就会成功，value就是返回的值
-                 **3、如果回调函数返回是promise，return的promise结果就是这个promise的结果
-                 */
-                try {
-                    const result = callback(self.data)
-                    // 3、如果回调函数返回是promise，return的promise结果就是这个promise的结果
-                    if (result instanceof Promise) {
-                        result.then(
-                            value => resolve(value), // 当result成功时，让return的promise也成功
-                            reason => reject(reason) // 当result失败时，让return的promise也失败
-                        )
-                        // result.then(resolve,reject)   
-                    } else {
-                        // 3、如果回调函数返回的不是promise，return的promise就会成功，value就是返回的值
-                        resolve(result)
-                    }
-                } catch (error) {
-                    // 1、如果抛出异常，return的promise就会失败，reason就是error
-                    reject(error)
-                }
-            }
-
-            // 当前状态是pending状态，将回调函数保存起来
-            if (self.status === PENDING) {
-                self.callbacks.push({
-                    onResolved(value) {
-                        handle(onResolved)
-                    },
-                    onRejected(reason) {
-                        handle(onRejected)
-                    }
-                })
-            } else if (self.status === RESOLVED) { // 如果当前是resolved状态，异步执行onResolved并改变return的promise状态
-                setTimeout(() => {
-                    handle(onResolved)
-                })
-            } else { // 'rejected'  如果当前是rejected状态，异步执行onRejected并改变return的promise状态
-                setTimeout(() => {
-                    handle(onRejected)
-                })
-            }
-        })
     }
     /*
      ** Promise原型对象的catch()===（同步执行的，只是根据状态来分别调不同的回调函数）
