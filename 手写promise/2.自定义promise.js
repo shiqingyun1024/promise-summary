@@ -201,8 +201,15 @@
      ** 返回一个指定结果的成功的Promise对象
      */
     Promise.resolve = function (value) {
-        const self = this
-
+        // 返回一个成功/失败的promise
+        return new Promise((resolve,reject)=>{
+            // value是promise
+            if(value instanceof Promise){ // 因为这个时候value是promise，所以使用value的结果作为promise的结果
+               value.then(resolve,reject)
+            }else{  // value不是promise => promise变为成功，数据是value
+               resolve(value)
+            }
+        })
     }
 
     /*
@@ -210,8 +217,10 @@
      ** 返回一个指定reason的失败的Promise对象
      */
     Promise.reject = function (reason) {
-        const self = this
-
+        // 返回一个失败的promise
+        return new Promise((resolve,reject)=>{
+            reject(reason)
+        })
     }
 
     /*
