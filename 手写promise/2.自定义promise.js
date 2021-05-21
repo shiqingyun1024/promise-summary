@@ -134,7 +134,7 @@
         onRejected = typeof onRejected === 'function' ? onRejected : reason => {
             throw reason
         }
-        const self = this
+        // const self = this
         // 返回一个新的promise对象
         return new Promise((resolve, reject) => {
             /*
