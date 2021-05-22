@@ -13,7 +13,28 @@
         const p3 = Promise.resolve(Promise.reject(4)) // 如果是失败的promise，p3失败，reason是这个promise的reason
         // p1.then(value=>{console.log('p1',value)})
         // p2.then(value=>{console.log('p2',value)})
-        p3.catch(reason=>{console.log('p3',reason)})
+        // setTimeout(()=>{
+        //     console.log(12);
+        //     console.log(p3);
+        // })
+        // p3.then((value)=>{
+        //     console.log('成功');
+        //     console.log(value);
+        // })
+        // p3.catch(reason=>{console.log('p3',reason)})
+        // console.log(p3);
+
+        const pAll = Promise.all([p1,p2])
+        const pRace = Promise.race([p1,p2,p3])
+
+        pRace.then(
+            value => {
+              console.log('race onResolved',value);
+            },
+            reason => {
+                console.log('race onRejected',reason);
+            }
+        )
     </script>
 </body>
 </html>

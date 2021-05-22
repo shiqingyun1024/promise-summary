@@ -90,7 +90,7 @@
                  3、返回的不是promise，返回promise为成功，value就是返回值
                  */
                 try {
-                    const result = onResolved(self.data)
+                    // const result = onResolved(self.data)
                     if (result instanceof Promise) { // 2、返回的是promise，返回promise的结果就是这个结果
                         //   result.then(
                         //       value=> resolve(value),
