@@ -170,8 +170,22 @@
      ** Promise函数对象的all方法
      ** 返回一个Promise，只有当所有Promise都成功才成功，否则只要有一个失败的就都失败
      */
-    Promise.all = function (Promises) {
+    Promise.all = function (promises) {
         const self = this
+        const values = [] // 用来保存所有成功value的数组
+        return new Promise((resolve,reject)=>{
+            // 遍历promises获取每个promise的结果
+            promises.forEach((p,index)=>{
+                p.then(
+                    value=>{
+
+                    },
+                    reason=>{ // 只要有一个失败了，return的promise就失败
+                      reject(reason)
+                    }
+                )
+            })
+        })
 
     }
 
