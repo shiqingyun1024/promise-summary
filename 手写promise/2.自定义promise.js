@@ -82,7 +82,7 @@
             根据执行的结果改变return的promise的状态/数组
             
             */
-            function handle(callbacks) {
+            function handle(callback) {
                 /*
                  返回promise的结果由onResolved/onRejected执行结果决定
                  1、抛出异常，返回promise的结果为失败，reason为异常
@@ -90,7 +90,7 @@
                  3、返回的不是promise，返回promise为成功，value就是返回值
                  */
                 try {
-                    // const result = onResolved(self.data)
+                    const result = callback(self.data)
                     if (result instanceof Promise) { // 2、返回的是promise，返回promise的结果就是这个结果
                         //   result.then(
                         //       value=> resolve(value),
