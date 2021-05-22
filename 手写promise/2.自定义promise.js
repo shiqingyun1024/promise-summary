@@ -172,12 +172,22 @@
      */
     Promise.all = function (promises) {
         const self = this
-        const values = [] // 用来保存所有成功value的数组
+        const values = new Array(promise.length) // 用来保存所有成功value的数组
+        // 用来保存成功promise的数量
+        let resolveCount = 0
+        // 返回一个新的promise
         return new Promise((resolve,reject)=>{
             // 遍历promises获取每个promise的结果
             promises.forEach((p,index)=>{
                 p.then(
-                    value=>{
+                    value=>{ // p成功，将成功的value保存到values中
+                        resolveCount++
+                        values[index]= value
+
+                        // 如果全部成功了，将return的promise改为成功。
+                        if(resolveCount === promises.lenth){
+                            resolve(values)
+                        }
 
                     },
                     reason=>{ // 只要有一个失败了，return的promise就失败
