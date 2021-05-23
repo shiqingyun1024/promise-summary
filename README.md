@@ -372,7 +372,79 @@ Promise.resolve = function (value){
 }
 ```
 ### 3.5、Promise.all()/race()的实现
+```
+   /*
+     ** Promise函数对象的all方法
+     ** 返回一个Promise，只有当所有Promise都成功才成功，否则只要有一个失败的就都失败
+     */
+    Promise.all = function (promises) {
+        const values = new Array(promises.length) // 用来保存所有成功value的数组
+        // 用来保存成功promise的数量
+        let resolveCount = 0
+        // 返回一个新的promise
+        return new Promise((resolve,reject)=>{
+            // 遍历promises获取每个promise的结果
+            promises.forEach((p,index)=>{
+                Promise.resolve(p).then(
+                    value=>{ // p成功，将成功的value保存到values中
+                        resolveCount++
+                        values[index]= value
+
+                        // 如果全部成功了，将return的promise改为成功。
+                        if(resolveCount === promises.length){
+                            resolve(values)
+                        }
+
+                    },
+                    reason=>{ // 只要有一个失败了，return的promise就失败
+                      reject(reason)
+                    }
+                )
+            })
+        })
+
+    }
+
+
+    /*
+     ** Promise函数对象的race方法
+     ** 返回一个Promise，其结果由第一个完成的Promise来决定
+     */
+    Promise.race = function (promises) {
+        // 返回一个promise
+        return new Promise((resolve,reject)=>{
+            // 遍历promises获取每个promise的结果
+            promises.forEach((p,index)=>{
+                Promise.resolve(p).then(
+                    value=>{ // 一旦第一个改变状态的成功了，return的promise就是成功的，而且是第一个改变状态的值。
+                      resolve(value)
+                    },
+                    reason=>{ // 一旦有一个失败了，return的promise就失败
+                      reject(reason)
+                    }
+                )
+            })
+        })
+
+
+    }
+```
 ### 3.6、Promise.resolveDelay()/rejectDelay()的实现
+```
+<!-- 返回一个延迟指定时间才确定结果的promise对象 -->
+Promise.resolveDelay = function(value,time){
+   return new Promise((resolve,reject)=>{
+      setTimeout(()=>{
+         if(value instanceof Promise){
+            <!-- 如果value是一个promise，取这个promise的结果值作为返回的promise的结果值 -->
+            value.then(resolve,reject) // 如果value成功，调用resolve(val),如果value失败了，调用reject(reason)
+         }else{
+            resolve(value)
+         }
+      },time)
+   })
+}
+```
 ### 3.7、ES5 function完整版本
 ### 3.8、ES6 class完整版
 

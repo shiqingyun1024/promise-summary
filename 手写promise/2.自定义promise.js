@@ -171,7 +171,6 @@
      ** 返回一个Promise，只有当所有Promise都成功才成功，否则只要有一个失败的就都失败
      */
     Promise.all = function (promises) {
-        const self = this
         const values = new Array(promises.length) // 用来保存所有成功value的数组
         // 用来保存成功promise的数量
         let resolveCount = 0
@@ -220,6 +219,34 @@
         })
 
 
+    }
+
+    /**
+     * 返回一个promise对象。它在指定的时间后才确定结果
+     * */ 
+    Promise.resolveDelay = function(value,time){
+        return new Promise((resolve,reject)=>{
+            setTimeout(()=>{
+               if(value instanceof Promise){
+                  // 如果value是一个promise，取这个promise的结果值作为返回的promise的结果值
+                  value.then(resolve,reject) // 如果value成功，调用resolve(val),如果value失败了，调用reject(reason)
+               }else{
+                  resolve(value)
+               }
+            },time)
+         })
+    }
+
+    /**
+     * 返回一个promise对象。它在指定的时间后才失败
+     * */ 
+    Promise.rejectDelay = function(reason,time){
+        // 返回一个失败的promise
+        return new Promise((resolve,reject)=>{
+            setTimeout(()=>{
+                reject(reason)
+            },time)
+        })
     }
 
     /*
