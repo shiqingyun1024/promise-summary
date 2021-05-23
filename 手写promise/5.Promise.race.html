@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义promise</title>
+</head>
+<body>
+    <script src="./2.自定义promise.js"></script>
+    <script>
+        const p1 = Promise.resolve(2) // 如果是一般值，p1成功，value就是这个值
+        const p2 = Promise.resolve(Promise.resolve(3)) // 如果是成功的promise，p2成功，value是这个promise的value
+        const p3 = Promise.resolve(Promise.reject(4)) // 如果是失败的promise，p3失败，reason是这个promise的reason
+        const p4 = new Promise((resolve)=>{
+            setTimeout(()=>{
+                resolve(5)
+            },1000)
+        })
+
+        const pRace = Promise.race([p1,p2,p3]) // 结果是：race onRejected 2
+
+        pRace.then(
+            value => {
+              console.log('race onResolved',value);
+            },
+            reason => {
+                console.log('race onRejected',reason);
+            }
+        )
+    </script>
+</body>
+</html>

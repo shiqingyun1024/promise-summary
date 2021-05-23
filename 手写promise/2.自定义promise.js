@@ -203,8 +203,21 @@
      ** Promise函数对象的race方法
      ** 返回一个Promise，其结果由第一个完成的Promise来决定
      */
-    Promise.race = function (Promises) {
-        const self = this
+    Promise.race = function (promises) {
+        // 返回一个promise
+        return new Promise((resolve,reject)=>{
+            // 遍历promises获取每个promise的结果
+            promises.forEach((p,index)=>{
+                p.then(
+                    value=>{ // 一旦第一个改变状态的成功了，return的promise就是成功的，而且是第一个改变状态的值。
+                      resolve(value)
+                    },
+                    reason=>{ // 一旦有一个失败了，return的promise就失败
+                      reject(reason)
+                    }
+                )
+            })
+        })
 
 
     }
