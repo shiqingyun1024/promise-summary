@@ -179,7 +179,7 @@
         return new Promise((resolve,reject)=>{
             // 遍历promises获取每个promise的结果
             promises.forEach((p,index)=>{
-                p.then(
+                Promise.resolve(p).then(
                     value=>{ // p成功，将成功的value保存到values中
                         resolveCount++
                         values[index]= value
@@ -208,7 +208,7 @@
         return new Promise((resolve,reject)=>{
             // 遍历promises获取每个promise的结果
             promises.forEach((p,index)=>{
-                p.then(
+                Promise.resolve(p).then(
                     value=>{ // 一旦第一个改变状态的成功了，return的promise就是成功的，而且是第一个改变状态的值。
                       resolve(value)
                     },
