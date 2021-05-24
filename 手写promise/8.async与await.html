@@ -6,6 +6,14 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <script>
+        // async函数的返回值是一个promise对象
+        async function fn1(){
+            // return 1
+            throw 2
+        }
+        const result = fn1()
+        console.log(result);
+    </script>
 </body>
 </html>

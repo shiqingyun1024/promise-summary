@@ -456,8 +456,15 @@ Promise.resolveDelay = function(value,time){
 2、promise对象的结果由async函数执行的返回值决定
 ```
 ### 4.3、await 表达式
+```
 1、await  右侧的表达式一般为promise对象，但也可以是其他的值
 2、如果表达式是promise对象，await返回的是promise成功的值
+```
+### 4.4、注意
+```
+await必须写在async函数中，但是async函数中可以没有await
+如果await的promise失败了，就会抛出异常，需要通过try...catch来捕获处理
+```
 
 ## 5、JS异步之宏队列与微队列
 ## 6、promise相关面试题
