@@ -449,6 +449,16 @@ Promise.resolveDelay = function(value,time){
 ### 3.8、ES6 class完整版
 
 ## 4、async与await
+### 4.1、mdn文档
+### 4.2、async函数
+```
+1、函数的返回值为promise对象
+2、promise对象的结果由async函数执行的返回值决定
+```
+### 4.3、await 表达式
+1、await  右侧的表达式一般为promise对象，但也可以是其他的值
+2、如果表达式是promise对象，await返回的是promise成功的值
+
 ## 5、JS异步之宏队列与微队列
 ## 6、promise相关面试题
 
