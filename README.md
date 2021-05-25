@@ -467,6 +467,7 @@ await必须写在async函数中，但是async函数中可以没有await
 ```
 
 ## 5、JS异步之宏队列与微队列
+![通信流程图](https://github.com/814657780/promise-summary/手写promise/images/1.jpeg)
 ## 6、promise相关面试题
 
 
