@@ -8,12 +8,43 @@
 <body>
     <script>
         // async函数的返回值是一个promise对象
+        // async函数返回的promise的结果由函数执行的结果决定
         async function fn1(){
             // return 1
             throw 2
+            return Promise.reject(3)
         }
         const result = fn1()
+        result.then(
+            value=>{
+              console.log('onResolved()',value);
+            },
+            reason=>{
+                console.log('onResolved()',reason);
+            }
+        )
         console.log(result);
+
+        function fn2(){
+            // return Promise.resolve(2)
+            return Promise.reject(2)
+        }
+        function fn4(){
+            return 6
+        }
+        // await只能得到成功的结果，所以如果是失败的回调，要用try catch捕捉错误
+        async function fn3(){
+            try{
+               const value = await fn2()  // await右侧表达式为promise，得到的结果就是promise成功的value
+               console.log('value',value);
+            }catch(error){
+               console.log('得到失败的结果',error);
+            }
+      
+            // const value = await fn4()  // await右侧表达式不是promise，得到的结果就是它本身
+            // console.log('value',value);
+        }
+        fn3()
     </script>
 </body>
 </html>
