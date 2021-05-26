@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise相关面试题1</title>
+</head>
+
+<body>
+    <script>
+        setTimeout(() => {
+            console.log("0");
+        }, 0)
+        new Promise((resolve, reject) => {
+            console.log("1");
+            resolve()
+        }).then(() => {
+            console.log("2");
+            new Promise((resolve, reject) => {
+                console.log("3")
+                resolve()
+            }).then(() => {
+                console.log("4")
+            }).then(() => {
+                console.log("5");
+            })
+        }).then(() => {
+            console.log("6");
+        })
+
+        new Promise((resolve, reject) => {
+            console.log("7");
+            resolve()
+        }).then(() => {
+            console.log("8");
+        })
+        // 同步 
+        // 宏 [0 ] 
+        // 微 [4 6] 
+        // 1 7 2 3 8 4 6 5 0
+        // 分析过程 0是宏任务，加到宏队列中 1是同步任务，接着立即执行resolve()，这个时候value为undefied，
+        // 状态为resolved，执行.then()，把2加入到微队列中，接着执行.then()，因为现在的状态为pending，所以6会加入到callbacks中
+        // 接着执行7，7是同步的，立即执行resolve(),这个时候value为undefied，状态为resolved，执行.then()，把8加入到微队列中
+        // 目前同步执行的是1 7，所以先输出1 7。微队列中是 2 8，先执行2 ，2执行的过程中，3是同步，然后立即执行resolve(),这个时候value为undefied，状态为resolved
+        // 把4加入到微队列中，把6加入微队列中（程序是从上到下执行的，先执行了3下面的resolve(),所以先把4放在微队列中）。微队列中的2执行完，接着是8，所以输出的是 2 3 8 。这个时候执行微队列中的4，然后把5加入到微队列中
+        // 执行微队列中的6。所以这段时间输出的是 4 6。接着执行微队列中的5，输出5，最后执行宏队列中的0.
+        // 所以最后的结果是 1 7 2 3 8 4 6 5 0
+    </script>
+</body>
+
+</html>
