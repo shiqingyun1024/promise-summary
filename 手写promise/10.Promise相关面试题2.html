@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise相关面试题1</title>
+</head>
+
+<body>
+    <script>
+        setTimeout(() => {
+            console.log(1);
+        }, 0)
+        new Promise((resolve)=>{
+            console.log(2);
+            resolve()
+        }).then(() => {
+            console.log(3);
+        }).then(() => {
+            console.log(4);
+        })
+        console.log(5);
+        // 执行的结果为 2 5 3 4 1
+        // 先执行同步任务，微队列，宏队列
+    </script>
+</body>
+
+</html>
