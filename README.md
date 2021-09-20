@@ -528,6 +528,23 @@ Call Stack 空闲 ---> 尝试DOM渲染 --->触发Event Loop
 ```
 自己的话术去描述，每当Call Stack空闲时，都会去尝试DOM渲染，渲染完后，去触发Event loop，然后把任务放到Call Stack中执行，执行完后，如果Call Stack是空闲，那么就会尝试DOM渲染，渲染完后，去触发Event loop，然后把任务放到Call Stack中执行，执行完后，如果Call Stack是空闲，开始新一轮的循环。
 ```
+### event loop 和 DOM渲染。
+- 再次回归一遍event loop的过程。
+- JS是单线程的，而且和DOM渲染公用一个线程。
+- JS执行的时候，得留一些时机供DOM渲染。
+
+总的来说，整个流程是：
+- 每次Call Stack清空(即每次轮询结束)，即同步任务执行完。
+- 都是DOM重新渲染的机会，DOM结构如有改变则重新渲染。
+- 然后再去触发下一次Event Loop
+一会会有个案例去证明这一点。
+
+更进一步的流程是：
+- 微任务：DOM渲染之前触发，如Promise
+- 宏任务：DOM渲染之后触发，如setTimeout
+
+
+
 
 
 
