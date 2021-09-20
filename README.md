@@ -543,6 +543,14 @@ Call Stack 空闲 ---> 尝试DOM渲染 --->触发Event Loop
 - 微任务：DOM渲染之前触发，如Promise
 - 宏任务：DOM渲染之后触发，如setTimeout
 
+为什么微任务在DOM渲染之前触发，宏任务在DOM渲染之后触发？
+- 微任务是放在micro task queue（微任务队列）里面
+- web APIs是浏览器定义的APIs，可以看宏任务这部分
+- 微任务是ES6语法规定的（如：Promise）
+- 宏任务是由浏览器规定的（如：setTimeout、setInterval、DOM回调，ajax回调等都是浏览器自己定义的api方法。）
+
+
+
 
 
 
