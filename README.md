@@ -486,7 +486,7 @@ await必须写在async函数中，但是async函数中可以没有await
 ## 6、promise相关面试题
 ```
 ```
-## event loop(事件循环/事件轮询)
+## 7、event loop(事件循环/事件轮询)
 - JS是单线程运行的
 - 异步要基于回调来实现
 - event loop就是异步回调的实现原理
@@ -517,6 +517,16 @@ await必须写在async函数中，但是async函数中可以没有await
 4、如果Call Stack为空（即同步代码执行完）Event Loop开始工作
 5、轮询查找Callback Queue，如有则移动到Call Stack执行。
 6、然后等执行栈空了之后，继续轮询回调队列。
+```
+####  宏任务macroTask和微任务microTask
+- 宏任务：setTimeout、setInterval、DOM事件回调、ajax回调、setImmediate(node)、requestAnimationFrame(浏览器)
+- 微任务：promise的回调(.then、catch、finally)、MutationObserver的回调、async await、process.nextTick(node)
+- 微任务执行时机比宏任务要早（记住）
+
+### 回顾event loop过程（增加DOM渲染时机）
+Call Stack 空闲 ---> 尝试DOM渲染 --->触发Event Loop
+```
+自己的话术去描述，每当Call Stack空闲时，都会去尝试DOM渲染，渲染完后，去触发Event loop，然后把任务放到Call Stack中执行，执行完后，如果Call Stack是空闲，那么就会尝试DOM渲染，渲染完后，去触发Event loop，然后把任务放到Call Stack中执行，执行完后，如果Call Stack是空闲，开始新一轮的循环。
 ```
 
 
