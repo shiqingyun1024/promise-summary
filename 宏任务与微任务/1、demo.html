@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宏任务与微任务的执行时机与DOM渲染的时机问题</title>
+</head>
+<body>
+    <!-- 宏任务是在DOM渲染之后执行，微任务是在DOM渲染之前执行 -->
+    <div id="parent"></div>
+    <script>
+        console.log('执行开始');
+        let parent = document.getElementById('parent');
+        // const [p1,p2,p3] = [
+        //     '<p>一段文字1</p>',
+        //     '<p>一段文字2</p>',
+        //     '<p>一段文字3</p>'
+        // ]
+        // console.log(parent);
+        // parent.innerHTML = p1;
+        // parent.innerHTML += p2;
+        // parent.innerHTML += p3;
+        function createElement(value){
+            let z = document.createElement('p');
+            z.innerHTML = value;
+            return z;
+        }
+        parent.appendChild(createElement('1'));
+        parent.appendChild(createElement('2'));
+        parent.appendChild(createElement('3'));
+        console.log('parent的子元素个数',parent.children.length);
+        // DOM渲染之后触发  宏任务
+        setTimeout(function(){
+            const length = parent.children.length;
+            alert(`宏任务${length}`)
+        },0)
+        // DOM渲染之前触发  微任务
+        Promise.resolve().then(()=>{
+            const length = parent.children.length;
+            alert(`微任务${length}`)
+        })
+    </script>
+</body>
+</html>
