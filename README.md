@@ -484,5 +484,42 @@ await必须写在async函数中，但是async函数中可以没有await
 
 ```
 ## 6、promise相关面试题
+```
+```
+## event loop(事件循环/事件轮询)
+- JS是单线程运行的
+- 异步要基于回调来实现
+- event loop就是异步回调的实现原理
+### JS如何执行？
+- 从前到后，一行一行执行。
+- 如果某一行执行报错，则停止下面代码的执行。
+- 先把同步代码执行完，再执行异步
+### event loop的流程
+```
+主要流程是有：
+1、Browser console  浏览器控制台
+2、Call Stack  调用栈
+3、Web APIs   web apis
+4、callback queue 回调队列  --- 等调用栈空了之后，Event Loop 会一直轮询回调队列，如果有任务，就会加到调用栈中进行执行。
+```
+####  总结event loop的过程
+- 同步代码，一行一行放在Call Stack（执行栈）执行
+- 遇到异步，会先“记录下”，等待时机（定时，网络请求等）
+- 时机到了，就移动到callback Queue（回调队列）
+- 如果Call Stack为空（即同步代码执行完）Event Loop开始工作
+- 轮询查找Callback Queue，如有则移动到Call Stack执行
+- 然后继续轮询查找（永动机一样）
+```
+用自己的话术描述：
+1、执行js代码的时候，是从上到下依次执行，遇到同步代码，会放在Call Stack（执行栈）中执行。
+2、遇到异步代码，会先"记录下来"，也就是放在Web APIs里面，等待时机。
+3、时机到了（就是如定时器时间到了，发送的请求后，数据响应回来了等），就移动到Callback Queue（回调队列）中。
+4、如果Call Stack为空（即同步代码执行完）Event Loop开始工作
+5、轮询查找Callback Queue，如有则移动到Call Stack执行。
+6、然后等执行栈空了之后，继续轮询回调队列。
+```
+
+
+
 
 
