@@ -549,6 +549,12 @@ Call Stack 空闲 ---> 尝试DOM渲染 --->触发Event Loop
 - 微任务是ES6语法规定的（如：Promise）
 - 宏任务是由浏览器规定的（如：setTimeout、setInterval、DOM回调，ajax回调等都是浏览器自己定义的api方法。）
 
+总结上面的流程是：
+1、Call Stack 清空。
+2、执行当前的微任务。
+3、尝试DOM渲染。
+4、触发Event Loop，执行宏任务。
+
 
 
 
