@@ -520,6 +520,21 @@ await必须写在async函数中，但是async函数中可以没有await
 - 宏任务：setTimeout、setInterval、DOM事件回调、ajax回调、setImmediate(node)、requestAnimationFrame(浏览器)
 - 微任务：promise的回调(.then、catch、finally)、MutationObserver的回调、async await、process.nextTick(node)
 - 微任务执行时机比宏任务要早（记住）
+```
+macro-task大概包括：
+script(整体代码)
+setTimeout
+setInterval
+setImmediate
+I/O
+UI render
+
+micro-task大概包括:
+process.nextTick
+Promise
+Async/Await(实际就是promise)
+MutationObserver(html5新特性)
+```
 
 ### 回顾event loop过程（增加DOM渲染时机）
 Call Stack 空闲 ---> 尝试DOM渲染 --->触发Event Loop
@@ -528,7 +543,7 @@ Call Stack 空闲 ---> 尝试DOM渲染 --->触发Event Loop
 ```
 ### event loop 和 DOM渲染。
 - 再次回归一遍event loop的过程。
-- JS是单线程的，而且和DOM渲染公用一个线程。
+- JS是单线程的，而且和DOM渲染共用一个线程。
 - JS执行的时候，得留一些时机供DOM渲染。
 
 总的来说，整个流程是：
