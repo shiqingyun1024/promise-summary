@@ -425,8 +425,6 @@ Promise.resolve = function (value){
                 )
             })
         })
-
-
     }
 ```
 ### 3.6、Promise.resolveDelay()/rejectDelay()的实现
@@ -554,6 +552,18 @@ Call Stack 空闲 ---> 尝试DOM渲染 --->触发Event Loop
 2、执行当前的微任务。
 3、尝试DOM渲染。
 4、触发Event Loop，执行宏任务。
+
+### 事件循环机制面试题
+对于 面试题：说说事件循环机制(满分答案来了)这篇文章的理解（https://mp.weixin.qq.com/s/QgfE5Km1xiEkQqADMLmj-Q）
+```
+总的结论就是，执行宏任务，然后执行该宏任务产生的微任务，若微任务在执行过程中产生了新的微任务，则继续执行微任务，
+微任务执行完毕后，再回到宏任务中进行下一轮循环。
+```
+#### async/await执行顺序 --- 重点（主要是这块的理解）
+```
+我们知道async隐式返回 Promise 作为结果的函数,那么可以简单理解为，await后面的函数执行完毕时，await会产生一个微任务(Promise.then是微任务)。但是我们要注意这个微任务产生的时机，它是执行完await之后，直接跳出async函数，执行其他代码(此处就是协程的运作，A暂停执行，控制权交给B)。其他代码执行完毕后，再回到async函数去执行剩下的代码，然后把await后面的代码注册到微任务队列当中
+```
+
 
 
 
