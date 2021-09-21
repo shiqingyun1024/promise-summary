@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>async与await在event loop中的执行时机，情况1</title>
+</head>
+
+<body>
+    <!-- async与await在event loop中的执行时机 -->
+    <!-- 1、如果await 后面直接跟的为一个变量，
+        比如：await 1；这种情况的话相当于直接把await后面的代码注册为一个微任务，
+        可以简单理解为promise.then(await下面的代码)。
+        然后跳出async1函数，执行其他代码，当遇到promise函数的时候，会注册promise.then()函数到微任务队列，
+        注意此时微任务队列里面已经存在await后面的微任务。
+        所以这种情况会先执行await后面的代码（async1 end），再执行async1函数后面注册的微任务代码(promise1,promise2)。 -->
+    <script>
+        console.log('script start') // 1
+
+        async function async1() {
+            await async2()
+            console.log('async1 end') // 5
+        }
+        async function async2() {
+            console.log('async2 end') // 2
+        }
+        async1()
+
+        setTimeout(function () {
+            console.log('setTimeout') // 8
+        }, 0)
+
+        new Promise(resolve => {
+            console.log('Promise')  // 3
+            resolve()
+        }).then(function () {
+                console.log('promise1') // 6
+            })
+            .then(function () {
+                console.log('promise2') // 7
+            })
+
+        console.log('script end')  // 4
+
+        /* 
+           script start  2、async与await.html:13 
+           async2 end    2、async与await.html:20 
+           Promise       2、async与await.html:29 
+           script end    2、async与await.html:38 
+           async1 end    2、async与await.html:17 
+           promise1      2、async与await.html:32 
+           promise2      2、async与await.html:35 
+           setTimeout    2、async与await.html:25 */
+    </script>
+</body>
+
+</html>
