@@ -32,9 +32,6 @@
             })
         }
 
-        // console.log(promiseAll([1, 2, 3]))
-        // console.log(promiseAll(1))
-        // console.log(promiseAll([1, new Error('错误')]))
 
         const p1 = new Promise((resolve, reject) => {
             resolve('hello');
@@ -52,6 +49,7 @@
         //     .then(result => result)
         //     .catch(e => e);
 
+        // p1如果隐藏掉then和catch，那就是p1快，如果不隐藏，那就是p2快
         promiseRace([p1, p2])
             .then(result => { console.log('正常'), console.log(result) })
             .catch(e => { console.log('报错'), console.log(e) });

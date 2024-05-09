@@ -25,17 +25,13 @@
                     console.log(promises[i])
                     count++;
                     Promise.resolve(promises[i]).then(value => {
-                        console.log("返回resolve")
                         promisesArray[i] = { status: 'fulfilled', value: value };
                         if (count == promisesLength) {
-                            console.log("返回fulfilled")
                             return resolve(promisesArray)
                         }
                     }, error => {
-                        console.log("返回reject")
                         promisesArray[i] = { status: 'rejected', reason: error };
                         if (count == promisesLength) {
-                            console.log("返回reject")
                             return resolve(promisesArray)
                         }
                     })
@@ -43,9 +39,7 @@
             })
         }
 
-        // console.log(promiseAll([1, 2, 3]))
-        // console.log(promiseAll(1))
-        // console.log(promiseAll([1, new Error('错误')]))
+        console.log(promiseAllSettled([1, 2, 3])) // 1, 2, 3
 
         const p1 = new Promise((resolve, reject) => {
             resolve('hello');
@@ -69,6 +63,7 @@
 
         Promise.race([p1, p2]).then(result => { console.log('正常2'), console.log(result) })
             .catch(e => { console.log('报错2'), console.log(e) });
+        //  [{status: 'fulfilled', value: 'hello'}, {status: 'rejected', reason: Error: 报错了 at file:///Users/shixiaolin/Documents/github/promise%E5%AD%A6%E4%B9%A0%E7%B3%BB%E5%8}]
     </script>
 </body>
 
