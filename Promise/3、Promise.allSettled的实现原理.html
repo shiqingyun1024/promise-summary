@@ -4,35 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promise.all的实现原理</title>
+    <title>Promise.allSettled的实现原理</title>
 </head>
 
 <body>
     <script>
-        // Promise.all的实现原理
-        function promiseAll(promises) {
+        // Promise.allSettled的实现原理
+        function promiseAllSettled(promises) {
             return new Promise((resolve, reject) => {
                 if (!Array.isArray(promises)) {
                     return reject(new Error('传入的参数不是一个数组'))
                 }
                 if (promises.length == 0) {
-                    resolve([])
+                    return resolve([])
                 }
                 let promisesLength = promises.length;
                 let promisesArray = new Array(promisesLength);
                 let count = 0;
                 for (let i = 0; i < promisesLength; i++) {
                     console.log(promises[i])
+                    count++;
                     Promise.resolve(promises[i]).then(value => {
-                        count++;
-                        promisesArray[i] = value;
+                        console.log("返回resolve")
+                        promisesArray[i] = { status: 'fulfilled', value: value };
                         if (count == promisesLength) {
                             console.log("返回fulfilled")
                             return resolve(promisesArray)
                         }
                     }, error => {
                         console.log("返回reject")
-                        return reject(error)
+                        promisesArray[i] = { status: 'rejected', reason: error };
+                        if (count == promisesLength) {
+                            console.log("返回reject")
+                            return resolve(promisesArray)
+                        }
                     })
                 }
             })
@@ -45,8 +50,8 @@
         const p1 = new Promise((resolve, reject) => {
             resolve('hello');
         })
-            .then(result => result)
-            .catch(e => e);
+        // .then(result => result)
+        // .catch(e => e);
 
         const p2 = new Promise((resolve, reject) => {
             throw new Error('报错了');
@@ -58,9 +63,12 @@
         //     .then(result => result)
         //     .catch(e => e);
 
-        promiseAll([p1, p2])
+        promiseAllSettled([p1, p2])
             .then(result => { console.log('正常'), console.log(result) })
             .catch(e => { console.log('报错'), console.log(e) });
+
+        Promise.race([p1, p2]).then(result => { console.log('正常2'), console.log(result) })
+            .catch(e => { console.log('报错2'), console.log(e) });
     </script>
 </body>
 
