@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise.all的实现原理</title>
+</head>
+
+<body>
+    <script>
+        // Promise.all的实现原理
+        function promiseAll(promises) {
+            return new Promise((resolve, reject) => {
+                if (!Array.isArray(promises)) {
+                    return reject(new Error('传入的参数不是一个数组'))
+                }
+                let promisesLength = promises.length;
+                let promisesArray = new Array(promisesLength);
+                let count = 0;
+                for (let i = 0; i < promisesLength; i++) {
+                    console.log(promises[i])
+                    Promise.resolve(promises[i]).then(value => {
+                        count++;
+                        promisesArray[i] = value;
+                        if (count == promisesLength) {
+                            return resolve(promisesArray)
+                        }
+                    }, error => {
+                        return reject(error)
+                    })
+                }
+            })
+        }
+
+        console.log(promiseAll([1, 2, 3]))
+        // console.log(promiseAll(1))
+        console.log(promiseAll([1, new Error('错误')]))
+
+        const p1 = new Promise((resolve, reject) => {
+            resolve('hello');
+        })
+            .then(result => result)
+            .catch(e => e);
+
+        const p2 = new Promise((resolve, reject) => {
+            throw new Error('报错了');
+        })
+
+        // const p2 = new Promise((resolve, reject) => {
+        //     throw new Error('报错了');
+        // })
+        //     .then(result => result)
+        //     .catch(e => e);
+
+        promiseAll([p1, p2])
+            .then(result => console.log(result))
+            .catch(e => console.log(e));
+    </script>
+</body>
+
+</html>
