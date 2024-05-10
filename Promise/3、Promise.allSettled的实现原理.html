@@ -61,7 +61,7 @@
             .then(result => { console.log('正常'), console.log(result) })
             .catch(e => { console.log('报错'), console.log(e) });
 
-        Promise.race([p1, p2]).then(result => { console.log('正常2'), console.log(result) })
+        Promise.allSettled([p1, p2]).then(result => { console.log('正常2'), console.log(result) })
             .catch(e => { console.log('报错2'), console.log(e) });
         //  [{status: 'fulfilled', value: 'hello'}, {status: 'rejected', reason: Error: 报错了 at file:///Users/shixiaolin/Documents/github/promise%E5%AD%A6%E4%B9%A0%E7%B3%BB%E5%8}]
     </script>
