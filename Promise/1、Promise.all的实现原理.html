@@ -61,6 +61,21 @@
         promiseAll([p1, p2])
             .then(result => { console.log('正常'), console.log(result) })
             .catch(e => { console.log('报错'), console.log(e) });
+
+
+        function realizeInstanceOf(leftValue, rightValue) {
+            let [proto, prototype] = [Object.getPrototypeOf(leftValue), rightValue.prototype]
+            while (true) {
+                if (proto === null) {
+                    return false
+                }
+                if (proto === prototype) {
+                    return true
+                }
+
+                proto = Object.getPrototypeOf(proto)
+            }
+        }   
     </script>
 </body>
 
